@@ -1,6 +1,16 @@
+
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+/*
+   configuring and setting up Serilog as the logger for the application
+ */
+Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
+    .WriteTo.File("log/villaLogs.txt",rollingInterval: RollingInterval.Day).CreateLogger();
+builder.Host.UseSerilog();
 /* option.ReturnHttpNotAcceptable is used for content negotiation that means if the server accept on the xml and if the
  * server does not satisfy this request, then HTTP 406 Not Acceptable status code.
  * AddXmlDataContractSerializerFormatters method is used to configure the MVC (Model-View-Controller) framework to include 
