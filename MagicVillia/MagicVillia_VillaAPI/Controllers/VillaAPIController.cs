@@ -3,6 +3,7 @@ using MagicVillia_VillaAPI.Model;
 using MagicVillia_VillaAPI.Model.DTO;
 using MagicVillia_VillaAPI.Data;
 using Microsoft.AspNetCore.JsonPatch;
+using MagicVillia_VillaAPI.Logging;
 
 namespace MagicVillia_VillaAPI.Controllers
 {
@@ -12,19 +13,30 @@ namespace MagicVillia_VillaAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
-        private readonly ILogger<VillaAPIController> _logger;
+        //private readonly ILogger<VillaAPIController> _logger;
 
         // as the logger is build-in .net , here we are asking for the implementation with 
         // help of dependency injection.
+        /*
         public VillaAPIController(ILogger<VillaAPIController> logger)
         {
            _logger = logger;
         }
+        */
+
+        private readonly ILogging _logger;
+        public VillaAPIController(ILogging logger)
+        {
+
+            _logger = logger;
+
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            _logger.LogInformation("Getting all villas");
+            _logger.Log("Getting all villas", " ");
             return Ok(VillaStore.villaList);
         }
 
@@ -41,7 +53,7 @@ namespace MagicVillia_VillaAPI.Controllers
         {
             if (id == 0)
             {
-                _logger.LogError("Get Villa Error with Id" + id);
+                _logger.Log("Get Villa Error with Id" + id,"error");
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(x => x.Id == id);
